@@ -286,6 +286,21 @@ async function onSubmit(e) {
     // success, the generic scan is skipped.
     wifi_temp_probe_override: wifiTempProbeOverride,
   };
+
+  // Expose every recipe option's selected choice as a Mustache boolean
+  // so templates can gate sections with `{{#optname_choicekey}}...{{/...}}`.
+  // For each option, the chosen key is true and every other key is false.
+  // Lets the recipe author write {{#usb_diagnostic_enabled}} or
+  // {{^wifi_module_none}} without the selector needing to know about
+  // each specific option name.
+  if (recipe.options) {
+    for (const [optName, opt] of Object.entries(recipe.options)) {
+      const chosen = selectedOptions[optName];
+      for (const choiceKey of Object.keys(opt.choices || {})) {
+        formValues[`${optName}_${choiceKey}`] = (choiceKey === chosen);
+      }
+    }
+  }
   const extraDefaults = $("#orb-extra-defaults").value;
 
   const defaultsScript = assembleDefaults(
