@@ -190,6 +190,40 @@
             </div>
           </details>
 
+          <details id="orb-tailscale">
+            <summary>Tailscale (optional)</summary>
+            <p class="orb-hint">
+              Join the device to your tailnet on first boot. Hostname is set
+              to the auto-generated <code>Orb-NNNN</code>, Tailscale SSH is
+              enabled (so you can SSH via tailnet identity without exposing
+              dropbear publicly), and the node is tagged
+              <code>tag:sensorbox</code>. Generate an auth key at
+              <a href="https://login.tailscale.com/admin/settings/keys" target="_blank" rel="noopener">login.tailscale.com/admin/settings/keys</a>.
+            </p>
+            <label class="orb-checkbox-label">
+              <input type="checkbox" id="orb-tailscale-enabled" />
+              <span>Join tailnet on first boot</span>
+            </label>
+            <div id="orb-tailscale-fields" class="hide">
+              <div>
+                <label for="orb-tailscale-authkey">Auth key</label>
+                <div class="orb-password-field">
+                  <input
+                    id="orb-tailscale-authkey"
+                    type="password"
+                    autocomplete="off"
+                    placeholder="tskey-auth-..."
+                    spellcheck="false"
+                  />
+                  <button type="button" class="orb-toggle-pw" data-target="orb-tailscale-authkey" title="Show/hide auth key">show</button>
+                </div>
+                <p class="orb-hint">
+                  Burned into the image. Reflash to change.
+                </p>
+              </div>
+            </div>
+          </details>
+
           <details id="orb-advanced">
             <summary>Advanced: additional uci-defaults</summary>
             <p>

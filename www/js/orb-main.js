@@ -130,6 +130,17 @@ function wireForm() {
     }
   });
 
+  // Tailscale: show/hide the auth-key field based on the enable checkbox.
+  const tailscaleCheckbox = $("#orb-tailscale-enabled");
+  const tailscaleFields = $("#orb-tailscale-fields");
+  tailscaleCheckbox.addEventListener("change", () => {
+    if (tailscaleCheckbox.checked) {
+      show(tailscaleFields);
+    } else {
+      hide(tailscaleFields);
+    }
+  });
+
   // Password show/hide toggles
   document.querySelectorAll(".orb-toggle-pw").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -237,6 +248,8 @@ async function onSubmit(e) {
   // Empty fields are tolerated (trust the user); a misconfigured
   // telegraf will just retry-and-fail at runtime, no build-time block.
   const telemetryEnabled = $("#orb-telemetry-enabled").checked;
+  const tailscaleEnabled = $("#orb-tailscale-enabled").checked;
+  const tailscaleAuthKey = $("#orb-tailscale-authkey").value.trim();
 
   const formValues = {
     orb_token: $("#orb-token").value.trim(),
@@ -285,6 +298,11 @@ async function onSubmit(e) {
     // helper ahead of the generic hwmon scan; if it `exit 0`s on
     // success, the generic scan is skipped.
     wifi_temp_probe_override: wifiTempProbeOverride,
+    // Tailscale — _common.yaml's {{#tailscale_enabled}} section runs
+    // `tailscale up --auth-key=... --ssh --advertise-tags=tag:sensorbox`
+    // at first boot. Auth key is the only user-supplied value.
+    tailscale_enabled: tailscaleEnabled,
+    tailscale_auth_key: tailscaleAuthKey,
   };
 
   // Expose every recipe option's selected choice as a Mustache boolean
@@ -332,6 +350,8 @@ async function onSubmit(e) {
       // package omits temp, wireless, and others we use, causing telegraf
       // to bail at startup with "undefined but requested input".
       ...(telemetryEnabled ? ["telegraf-full"] : []),
+      // tailscale package: the daemon + CLI for joining the tailnet.
+      ...(tailscaleEnabled ? ["tailscale"] : []),
     ],
     diff_packages: false,
     repositories: recipe.repositories || {},
