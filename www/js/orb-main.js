@@ -299,8 +299,8 @@ async function onSubmit(e) {
     // success, the generic scan is skipped.
     wifi_temp_probe_override: wifiTempProbeOverride,
     // Tailscale — _common.yaml's {{#tailscale_enabled}} section runs
-    // `tailscale up --auth-key=... --ssh --advertise-tags=tag:sensorbox`
-    // at first boot. Auth key is the only user-supplied value.
+    // `tailscale up --auth-key=... --hostname=<Orb-NNNN> --ssh` on
+    // first boot. Auth key is the only user-supplied value.
     tailscale_enabled: tailscaleEnabled,
     tailscale_auth_key: tailscaleAuthKey,
   };
