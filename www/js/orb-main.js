@@ -250,6 +250,7 @@ async function onSubmit(e) {
   const telemetryEnabled = $("#orb-telemetry-enabled").checked;
   const tailscaleEnabled = $("#orb-tailscale-enabled").checked;
   const tailscaleAuthKey = $("#orb-tailscale-authkey").value.trim();
+  const dockerEnabled = $("#orb-docker-enabled").checked;
 
   const formValues = {
     orb_token: $("#orb-token").value.trim(),
@@ -303,6 +304,13 @@ async function onSubmit(e) {
     // first boot. Auth key is the only user-supplied value.
     tailscale_enabled: tailscaleEnabled,
     tailscale_auth_key: tailscaleAuthKey,
+    // Docker — _common.yaml's {{#docker_enabled}} section enables
+    // the dockerd init.d so the daemon starts at boot. The userspace
+    // packages (docker-ce, dockerd, docker-compose) come in via the
+    // build request's package list; on the Zero2 the required kmods
+    // are baked in via zero2.defconfig, on stock-kernel boards they
+    // come from upstream feeds.
+    docker_enabled: dockerEnabled,
   };
 
   // Expose every recipe option's selected choice as a Mustache boolean
@@ -352,6 +360,11 @@ async function onSubmit(e) {
       ...(telemetryEnabled ? ["telegraf-full"] : []),
       // tailscale package: the daemon + CLI for joining the tailnet.
       ...(tailscaleEnabled ? ["tailscale"] : []),
+      // docker package set: dockerd daemon + CLI + compose plugin.
+      // dockerd pulls in its own kmod deps (kmod-veth, kmod-ipt-nat, etc.);
+      // on Zero2 those are pre-built locally via zero2.defconfig, on
+      // stock-kernel devices they come from upstream apk feeds.
+      ...(dockerEnabled ? ["docker-ce", "docker-compose"] : []),
     ],
     diff_packages: false,
     repositories: recipe.repositories || {},

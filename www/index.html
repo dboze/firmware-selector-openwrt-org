@@ -223,6 +223,20 @@
             </div>
           </details>
 
+          <details id="orb-docker">
+            <summary>Docker (optional)</summary>
+            <p class="orb-hint">
+              Install the Docker daemon + Compose plugin on first boot, and
+              enable <code>dockerd</code> at startup. SSH in afterward to run
+              <code>docker compose up</code> against whatever workloads you
+              want. Adds ~50&nbsp;MB to the image.
+            </p>
+            <label class="orb-checkbox-label">
+              <input type="checkbox" id="orb-docker-enabled" />
+              <span>Install Docker</span>
+            </label>
+          </details>
+
           <details id="orb-advanced">
             <summary>Advanced: additional uci-defaults</summary>
             <p>
