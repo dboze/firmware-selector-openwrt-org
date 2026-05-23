@@ -1,6 +1,6 @@
-// Entry point for the orb-forge variant of the firmware selector.
+// Entry point for the sensorbox variant of the firmware selector.
 // Replaces the upstream device-picker flow with one driven by recipe YAML
-// files served from /recipes/ (see orb-forge's recipes/ directory).
+// files served from /recipes/ (see sensorbox's recipes/ directory).
 
 import { $, show, hide, showAlert, hideAlert } from "./utils.js";
 import {
@@ -10,8 +10,8 @@ import {
   mergedPackages,
   resolveKeys,
   assembleDefaults,
-} from "./orb-recipes.js";
-import { submitBuild } from "./orb-asu.js";
+} from "./sensorbox-recipes.js";
+import { submitBuild } from "./sensorbox-asu.js";
 
 const state = {
   common: null,
@@ -33,7 +33,7 @@ async function init() {
 
   if (state.recipes.length === 0) {
     showAlert(
-      "No recipes found in /recipes/. Add a YAML file to orb-forge's recipes/ directory and recreate the selector service."
+      "No recipes found in /recipes/. Add a YAML file to sensorbox's recipes/ directory and recreate the selector service."
     );
     return;
   }
@@ -43,7 +43,7 @@ async function init() {
 }
 
 function populateDeviceDropdown() {
-  const select = $("#orb-device");
+  const select = $("#sensorbox-device");
   select.innerHTML = "";
 
   const placeholder = document.createElement("option");
@@ -62,16 +62,16 @@ function populateDeviceDropdown() {
 }
 
 function wireForm() {
-  const form = $("#orb-form");
-  const select = $("#orb-device");
+  const form = $("#sensorbox-form");
+  const select = $("#sensorbox-device");
 
   select.addEventListener("change", () => {
     state.currentRecipe = getRecipeById(state.recipes, select.value);
-    $("#orb-device-description").innerText =
+    $("#sensorbox-device-description").innerText =
       state.currentRecipe?.description || "";
 
     // Device links (OpenWrt wiki, vendor docs, orb.net docs).
-    renderDeviceLinks($("#orb-device-links"), state.currentRecipe);
+    renderDeviceLinks($("#sensorbox-device-links"), state.currentRecipe);
 
     // Recipe options (e.g. Wi-Fi module selection). Each option becomes
     // a labeled dropdown. Selections are collected at build time and
@@ -82,9 +82,9 @@ function wireForm() {
     // selected Wi-Fi module is not "none". If the recipe uses a
     // wifi_module option, the dropdown drives visibility; otherwise
     // capabilities.wifi alone controls it.
-    const wifiGroup = $("#orb-wifi-group");
+    const wifiGroup = $("#sensorbox-wifi-group");
     const updateWifiVisibility = () => {
-      const moduleSelect = document.getElementById("orb-opt-wifi_module");
+      const moduleSelect = document.getElementById("sensorbox-opt-wifi_module");
       const hasWifi = state.currentRecipe?.capabilities?.wifi;
       const moduleSelected = !moduleSelect || moduleSelect.value !== "none";
       if (hasWifi && moduleSelected) {
@@ -94,7 +94,7 @@ function wireForm() {
       }
     };
     updateWifiVisibility();
-    const moduleSelect = document.getElementById("orb-opt-wifi_module");
+    const moduleSelect = document.getElementById("sensorbox-opt-wifi_module");
     if (moduleSelect) {
       moduleSelect.addEventListener("change", updateWifiVisibility);
     }
@@ -104,10 +104,10 @@ function wireForm() {
     // The hint text below the checkbox comes from the recipe's
     // install.hint field so recipe authors can note device-specific
     // caveats (e.g. "not all E20C models have eMMC").
-    const installGroup = $("#orb-install-group");
+    const installGroup = $("#sensorbox-install-group");
     if (state.currentRecipe?.install) {
       show(installGroup);
-      $("#orb-install-hint").innerText =
+      $("#sensorbox-install-hint").innerText =
         state.currentRecipe.install.hint || "";
     } else {
       hide(installGroup);
@@ -120,8 +120,8 @@ function wireForm() {
 
   // System telemetry: show/hide the URL/credentials sub-fields based
   // on the enable checkbox. Independent of recipe/device selection.
-  const telemetryCheckbox = $("#orb-telemetry-enabled");
-  const telemetryFields = $("#orb-telemetry-fields");
+  const telemetryCheckbox = $("#sensorbox-telemetry-enabled");
+  const telemetryFields = $("#sensorbox-telemetry-fields");
   telemetryCheckbox.addEventListener("change", () => {
     if (telemetryCheckbox.checked) {
       show(telemetryFields);
@@ -131,8 +131,8 @@ function wireForm() {
   });
 
   // Tailscale: show/hide the auth-key field based on the enable checkbox.
-  const tailscaleCheckbox = $("#orb-tailscale-enabled");
-  const tailscaleFields = $("#orb-tailscale-fields");
+  const tailscaleCheckbox = $("#sensorbox-tailscale-enabled");
+  const tailscaleFields = $("#sensorbox-tailscale-fields");
   tailscaleCheckbox.addEventListener("change", () => {
     if (tailscaleCheckbox.checked) {
       show(tailscaleFields);
@@ -142,7 +142,7 @@ function wireForm() {
   });
 
   // Password show/hide toggles
-  document.querySelectorAll(".orb-toggle-pw").forEach((btn) => {
+  document.querySelectorAll(".sensorbox-toggle-pw").forEach((btn) => {
     btn.addEventListener("click", () => {
       const input = document.getElementById(btn.dataset.target);
       if (input) {
@@ -157,11 +157,11 @@ function wireForm() {
 }
 
 function validateForm() {
-  const device = $("#orb-device").value;
-  const token = $("#orb-token").value.trim();
-  const rootPw = $("#orb-root-password").value;
+  const device = $("#sensorbox-device").value;
+  const token = $("#sensorbox-token").value.trim();
+  const rootPw = $("#sensorbox-root-password").value;
   const valid = !!device && !!token && !!rootPw;
-  $("#orb-build").disabled = !valid;
+  $("#sensorbox-build").disabled = !valid;
   return valid;
 }
 
@@ -176,10 +176,10 @@ async function onSubmit(e) {
   // check the builder API to ensure it's ready before submitting to
   // ASU. If not ready, trigger a build and poll until complete.
   if (recipe.custom_branch) {
-    const statusEl = $("#orb-status");
+    const statusEl = $("#sensorbox-status");
     show(statusEl);
     statusEl.innerText = "Checking custom ImageBuilder status...";
-    statusEl.classList.remove("orb-status-error", "orb-status-success");
+    statusEl.classList.remove("sensorbox-status-error", "sensorbox-status-success");
 
     try {
       let res = await fetch(`/builder/status/${recipe.custom_branch}`);
@@ -200,8 +200,8 @@ async function onSubmit(e) {
             statusEl.innerText = `Building custom ImageBuilder... ${elapsed}m elapsed, ~${eta}m remaining`;
           } else if (status.error) {
             statusEl.innerText = `ImageBuilder build failed: ${status.error}`;
-            statusEl.classList.add("orb-status-error");
-            $("#orb-build").disabled = false;
+            statusEl.classList.add("sensorbox-status-error");
+            $("#sensorbox-build").disabled = false;
             return;
           }
           await new Promise((r) => setTimeout(r, 10000));
@@ -212,8 +212,8 @@ async function onSubmit(e) {
       }
     } catch (err) {
       statusEl.innerText = `Builder check failed: ${err.message}`;
-      statusEl.classList.add("orb-status-error");
-      $("#orb-build").disabled = false;
+      statusEl.classList.add("sensorbox-status-error");
+      $("#sensorbox-build").disabled = false;
       return;
     }
   }
@@ -234,7 +234,7 @@ async function onSubmit(e) {
   // _common.yaml's {{#install_to_emmc}} section doesn't render.
   const installBlock = recipe.install || null;
   const installToEmmc =
-    !!installBlock && $("#orb-install-to-emmc").checked;
+    !!installBlock && $("#sensorbox-install-to-emmc").checked;
 
   // Selected recipe options (e.g. {wifi_module: "intel_be200"}).
   // Used both for package merging and to look up the chosen Wi-Fi
@@ -247,9 +247,9 @@ async function onSubmit(e) {
   // Telemetry: only meaningful when the enable checkbox is checked.
   // Empty fields are tolerated (trust the user); a misconfigured
   // telegraf will just retry-and-fail at runtime, no build-time block.
-  const telemetryEnabled = $("#orb-telemetry-enabled").checked;
-  const tailscaleEnabled = $("#orb-tailscale-enabled").checked;
-  const tailscaleAuthKey = $("#orb-tailscale-authkey").value.trim();
+  const telemetryEnabled = $("#sensorbox-telemetry-enabled").checked;
+  const tailscaleEnabled = $("#sensorbox-tailscale-enabled").checked;
+  const tailscaleAuthKey = $("#sensorbox-tailscale-authkey").value.trim();
   // usb_diagnostic = enabled (Zero2 only, today) bundles WiFi Explorer
   // Pro's remote-sensor support — wlanpi user + sudoers + setcap.
   // Scandump is the tool WEPro actually drives, so usb_diagnostic
@@ -258,15 +258,15 @@ async function onSubmit(e) {
   // _common.yaml {{#scandump_enabled}} block installs.
   const usbDiagnosticEnabled = selectedOptions.usb_diagnostic === "enabled";
   const scandumpEnabled =
-    $("#orb-scandump-enabled").checked || usbDiagnosticEnabled;
+    $("#sensorbox-scandump-enabled").checked || usbDiagnosticEnabled;
   // scandump implies docker — the wrapper is just `docker run ...`.
   // Treat the scandump checkbox as a docker-enabled superset to avoid
   // shipping a broken /usr/bin/scandump with no docker to back it.
-  const dockerEnabled = $("#orb-docker-enabled").checked || scandumpEnabled;
+  const dockerEnabled = $("#sensorbox-docker-enabled").checked || scandumpEnabled;
 
   const formValues = {
-    orb_token: $("#orb-token").value.trim(),
-    root_password: $("#orb-root-password").value,
+    orb_token: $("#sensorbox-token").value.trim(),
+    root_password: $("#sensorbox-root-password").value,
     // First resolved key is assumed to be the Orb apk signing key.
     // _common.yaml writes it to /etc/apk/keys/orb-packages.pem so
     // the running device can verify new Orb versions fetched by
@@ -276,19 +276,19 @@ async function onSubmit(e) {
     // Wi-Fi config — only meaningful for recipes with capabilities.wifi.
     // The recipe's defaults template uses {{#wifi_ssid}} as a section
     // guard so the whole Wi-Fi block is omitted when SSID is empty.
-    wifi_ssid: $("#orb-wifi-ssid").value.trim(),
-    wifi_password: $("#orb-wifi-password").value,
-    wifi_encryption: $("#orb-wifi-encryption").value,
-    wifi_country: ($("#orb-wifi-country").value || "US").toUpperCase().trim(),
+    wifi_ssid: $("#sensorbox-wifi-ssid").value.trim(),
+    wifi_password: $("#sensorbox-wifi-password").value,
+    wifi_encryption: $("#sensorbox-wifi-encryption").value,
+    wifi_country: ($("#sensorbox-wifi-country").value || "US").toUpperCase().trim(),
     // Band lock: "auto" roams across all bands via scan_list;
     // locked bands set the radio directly with no scan_list.
-    wifi_band_auto: $("#orb-wifi-band").value === "auto",
+    wifi_band_auto: $("#sensorbox-wifi-band").value === "auto",
     wifi_radio_band: {
       auto: "5g", "2g": "2g", "5g": "5g", "6g": "6g",
-    }[$("#orb-wifi-band").value] || "5g",
+    }[$("#sensorbox-wifi-band").value] || "5g",
     wifi_radio_htmode: {
       auto: "HE80", "2g": "HE20", "5g": "HE80", "6g": "EHT80",
-    }[$("#orb-wifi-band").value] || "HE80",
+    }[$("#sensorbox-wifi-band").value] || "HE80",
     // Installer config — mirrored from the recipe's install block
     // into flat Mustache variables that _common.yaml's installer
     // heredoc interpolates. Empty strings when the recipe has no
@@ -302,10 +302,10 @@ async function onSubmit(e) {
     // System telemetry — _common.yaml's {{#telemetry_enabled}} section
     // wraps the entire telegraf install/config block.
     telemetry_enabled: telemetryEnabled,
-    telemetry_url: $("#orb-telemetry-url").value.trim(),
-    telemetry_username: $("#orb-telemetry-username").value.trim(),
-    telemetry_password: $("#orb-telemetry-password").value,
-    telemetry_include_wireless: $("#orb-telemetry-include-wireless").checked,
+    telemetry_url: $("#sensorbox-telemetry-url").value.trim(),
+    telemetry_username: $("#sensorbox-telemetry-username").value.trim(),
+    telemetry_password: $("#sensorbox-telemetry-password").value,
+    telemetry_include_wireless: $("#sensorbox-telemetry-include-wireless").checked,
     // Verbatim shell snippet from the selected Wi-Fi module's
     // wifi_temp_probe field (if any). Substituted into the wifi-temp.sh
     // helper ahead of the generic hwmon scan; if it `exit 0`s on
@@ -345,7 +345,7 @@ async function onSubmit(e) {
       }
     }
   }
-  const extraDefaults = $("#orb-extra-defaults").value;
+  const extraDefaults = $("#sensorbox-extra-defaults").value;
 
   const defaultsScript = assembleDefaults(
     state.common,
@@ -360,7 +360,7 @@ async function onSubmit(e) {
     target: recipe.target,
     profile: recipe.profile,
     // Packages sent to ASU is the union of _common.yaml's packages
-    // (orb-forge-wide dependencies like micrond for orb-update's
+    // (sensorbox-wide dependencies like micrond for orb-update's
     // cron) and the selected recipe's packages (device-specific
     // extras like orb). This is a list of ADDITIONS on top of the
     // profile's default packages — NOT a complete replacement list.
@@ -397,10 +397,10 @@ async function onSubmit(e) {
 }
 
 // Renders recipe options (e.g. Wi-Fi module selection) as labeled
-// dropdowns in the #orb-options container. Each option defined in
-// recipe.options becomes a <select> with id="orb-opt-{name}".
+// dropdowns in the #sensorbox-options container. Each option defined in
+// recipe.options becomes a <select> with id="sensorbox-opt-{name}".
 function renderOptions(recipe) {
-  const container = $("#orb-options");
+  const container = $("#sensorbox-options");
   container.innerHTML = "";
   if (!recipe || !recipe.options) return;
 
@@ -408,12 +408,12 @@ function renderOptions(recipe) {
     const div = document.createElement("div");
 
     const label = document.createElement("label");
-    label.setAttribute("for", `orb-opt-${name}`);
+    label.setAttribute("for", `sensorbox-opt-${name}`);
     label.textContent = opt.label || name;
     div.appendChild(label);
 
     const select = document.createElement("select");
-    select.id = `orb-opt-${name}`;
+    select.id = `sensorbox-opt-${name}`;
     for (const [key, choice] of Object.entries(opt.choices || {})) {
       const option = document.createElement("option");
       option.value = key;
@@ -433,7 +433,7 @@ function collectSelectedOptions(recipe) {
   const result = {};
   if (!recipe || !recipe.options) return result;
   for (const name of Object.keys(recipe.options)) {
-    const el = document.getElementById(`orb-opt-${name}`);
+    const el = document.getElementById(`sensorbox-opt-${name}`);
     if (el) result[name] = el.value;
   }
   return result;

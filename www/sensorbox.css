@@ -1,4 +1,4 @@
-/* orb-forge brand + form styles — layered on top of the upstream index.css. */
+/* sensorbox brand + form styles — layered on top of the upstream index.css. */
 
 @font-face {
   font-family: 'Lexend';
@@ -27,89 +27,89 @@ header {
     background-color: #231536 !important;
   }
 
-  #orb-form select,
-  #orb-form input[type="text"],
-  #orb-form input[type="password"],
-  #orb-form textarea {
+  #sensorbox-form select,
+  #sensorbox-form input[type="text"],
+  #sensorbox-form input[type="password"],
+  #sensorbox-form textarea {
     background-color: #2a1c3d;
     color: #e8e0f0;
     border-color: #3d2a57;
   }
 
-  #orb-advanced {
+  #sensorbox-advanced {
     background: #231536 !important;
     border-color: #3d2a57 !important;
     color: #e8e0f0;
   }
 
-  #orb-advanced summary {
+  #sensorbox-advanced summary {
     color: #e8e0f0;
   }
 
-  #orb-advanced p {
+  #sensorbox-advanced p {
     color: #b0a0c8;
   }
 
-  #orb-advanced textarea {
+  #sensorbox-advanced textarea {
     background: #2a1c3d;
     color: #e8e0f0;
     border-color: #3d2a57;
   }
 
-  #orb-advanced textarea::placeholder {
+  #sensorbox-advanced textarea::placeholder {
     color: #7a6a95;
   }
 
-  #orb-status {
+  #sensorbox-status {
     background: #231536;
   }
 
-  #orb-downloads {
+  #sensorbox-downloads {
     background: #1a2520;
     color: #d0e8dc;
   }
 
-  #orb-downloads a {
+  #sensorbox-downloads a {
     color: #6ee0b0;
   }
 
-  #orb-downloads code {
+  #sensorbox-downloads code {
     color: #a0c0b0;
     background: #253530;
   }
 
-  #orb-install-notes {
+  #sensorbox-install-notes {
     color: #d0e8dc;
   }
 
-  #orb-install-notes strong {
+  #sensorbox-install-notes strong {
     color: #ffffff;
   }
 
-  #orb-install-notes code {
+  #sensorbox-install-notes code {
     background: #253530;
     color: #a0c0b0;
   }
 
-  #orb-install-notes a {
+  #sensorbox-install-notes a {
     color: #6ee0b0;
   }
 
-  #orb-download-links a {
+  #sensorbox-download-links a {
     color: #b590ff;
   }
 
-  .orb-status-success {
+  .sensorbox-status-success {
     background: #1a2520 !important;
     color: #d0e8dc !important;
   }
 
-  .orb-status-error {
+  .sensorbox-status-error {
     background: #2a1520 !important;
     color: #f0c0c8 !important;
   }
 
-  #orb-status {
+  #sensorbox-status {
     background: #231536 !important;
     border-left-color: #7a2fd0 !important;
     color: #e8e0f0 !important;
@@ -128,7 +128,7 @@ a:hover {
   color: #9c62e9;
 }
 
-#orb-form {
+#sensorbox-form {
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -136,16 +136,16 @@ a:hover {
   max-width: 600px;
 }
 
-#orb-form label {
+#sensorbox-form label {
   font-weight: bold;
   display: block;
   margin-bottom: 0.25em;
 }
 
-#orb-form select,
-#orb-form input[type="text"],
-#orb-form input[type="password"],
-#orb-form textarea {
+#sensorbox-form select,
+#sensorbox-form input[type="text"],
+#sensorbox-form input[type="password"],
+#sensorbox-form textarea {
   width: 100%;
   box-sizing: border-box;
   padding: 0.5em;
@@ -155,12 +155,12 @@ a:hover {
   border-radius: 3px;
 }
 
-#orb-form textarea {
+#sensorbox-form textarea {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.9em;
 }
 
-#orb-form button {
+#sensorbox-form button {
   padding: 0.75em 1.5em;
   font-size: 1em;
   background: #7a2fd0;
@@ -171,27 +171,27 @@ a:hover {
   font-weight: bold;
 }
 
-#orb-form button:hover:not(:disabled) {
+#sensorbox-form button:hover:not(:disabled) {
   background: #5e1fad;
 }
 
-#orb-form button:disabled {
+#sensorbox-form button:disabled {
   background: #999;
   cursor: not-allowed;
 }
 
-.orb-password-field {
+.sensorbox-password-field {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.orb-password-field input {
+.sensorbox-password-field input {
   flex: 1;
   padding-right: 3.5em !important;
 }
 
-.orb-toggle-pw {
+.sensorbox-toggle-pw {
   position: absolute;
   right: 0.5em;
   background: none !important;
@@ -207,18 +207,18 @@ a:hover {
   font-weight: 600;
 }
 
-.orb-toggle-pw:hover {
+.sensorbox-toggle-pw:hover {
   color: #b590ff;
 }
 
-#orb-device-description {
+#sensorbox-device-description {
   color: #666;
   font-size: 0.9em;
   margin: 0.25em 0 0 0;
   min-height: 1.2em;
 }
 
-.orb-checkbox-label {
+.sensorbox-checkbox-label {
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -226,52 +226,52 @@ a:hover {
   cursor: pointer;
 }
 
-.orb-checkbox-label input[type="checkbox"] {
+.sensorbox-checkbox-label input[type="checkbox"] {
   width: auto;
   margin: 0;
 }
 
-.orb-hint {
+.sensorbox-hint {
   color: #666;
   font-size: 0.9em;
   margin: 0.25em 0 0 1.75em;
 }
 
-#orb-device-links {
+#sensorbox-device-links {
   font-size: 0.9em;
   margin: 0.5em 0 0 0;
 }
 
-#orb-device-links a {
+#sensorbox-device-links a {
   margin-right: 1em;
   color: #7a2fd0;
   text-decoration: none;
 }
 
-#orb-device-links a:hover {
+#sensorbox-device-links a:hover {
   text-decoration: underline;
 }
 
-#orb-advanced {
+#sensorbox-advanced {
   border: 1px solid #e4daf0;
   border-radius: 3px;
   padding: 0.5em 1em;
   background: #faf8fc;
 }
 
-#orb-advanced summary {
+#sensorbox-advanced summary {
   cursor: pointer;
   font-weight: bold;
   padding: 0.25em 0;
 }
 
-#orb-advanced p {
+#sensorbox-advanced p {
   color: #666;
   font-size: 0.9em;
   margin-top: 0.5em;
 }
 
-#orb-status {
+#sensorbox-status {
   padding: 1em;
   margin: 1em 0;
   background: #f3eefa;
@@ -282,17 +282,17 @@ a:hover {
   max-width: 600px;
 }
 
-.orb-status-error {
+.sensorbox-status-error {
   background: #fef0f2 !important;
   border-left-color: #ef476f !important;
 }
 
-.orb-status-success {
+.sensorbox-status-success {
   background: #f0faf5 !important;
   border-left-color: #19caa4 !important;
 }
 
-#orb-downloads {
+#sensorbox-downloads {
   padding: 1em;
   margin: 1em 0;
   background: #f0faf5;
@@ -301,66 +301,66 @@ a:hover {
   max-width: 600px;
 }
 
-#orb-downloads h3 {
+#sensorbox-downloads h3 {
   margin-top: 0;
 }
 
-#orb-install-notes {
+#sensorbox-install-notes {
   margin: 0 0 1em 0;
   line-height: 1.6;
   color: #1a3a2a;
 }
 
-#orb-install-notes ol,
-#orb-install-notes ul {
+#sensorbox-install-notes ol,
+#sensorbox-install-notes ul {
   padding-left: 1.5em;
   margin: 0.5em 0;
 }
 
-#orb-install-notes li {
+#sensorbox-install-notes li {
   margin-bottom: 0.3em;
 }
 
-#orb-install-notes strong {
+#sensorbox-install-notes strong {
   color: #0a2018;
 }
 
-#orb-install-notes code {
+#sensorbox-install-notes code {
   background: #e8e8e8;
   padding: 0.1em 0.3em;
   border-radius: 2px;
   font-size: 0.9em;
 }
 
-#orb-download-links {
+#sensorbox-download-links {
   margin-top: 1em;
   padding-top: 0.75em;
   border-top: 1px solid #ccc;
   font-size: 0.9em;
 }
 
-#orb-download-links a {
+#sensorbox-download-links a {
   margin-right: 1em;
   color: #7a2fd0;
   text-decoration: none;
 }
 
-#orb-download-links a:hover {
+#sensorbox-download-links a:hover {
   text-decoration: underline;
 }
 
-#orb-downloads ul {
+#sensorbox-downloads ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-#orb-downloads li {
+#sensorbox-downloads li {
   padding: 0.4em 0;
   word-break: break-all;
 }
 
-#orb-downloads code {
+#sensorbox-downloads code {
   color: #666;
   font-size: 0.85em;
 }

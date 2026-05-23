@@ -1,4 +1,4 @@
-// ASU build submission and polling for orb-forge.
+// ASU build submission and polling for sensorbox.
 //
 // Same-origin: the selector's nginx reverse-proxies /api/ and /store/ to
 // asu-server, so the browser never makes a cross-origin request and ASU
@@ -6,16 +6,16 @@
 
 import { $, show, hide } from "./utils.js";
 import snarkdown from "./vendor/snarkdown.es.js";
-import { renderDeviceLinks } from "./orb-recipes.js";
+import { renderDeviceLinks } from "./sensorbox-recipes.js";
 
 const API_BASE = "/api/v1";
 const POLL_INTERVAL_MS = 5000;
 
 export async function submitBuild(buildRequest, recipe) {
-  const statusEl = $("#orb-status");
-  const downloadsEl = $("#orb-downloads");
-  const downloadListEl = $("#orb-download-list");
-  const buildButton = $("#orb-build");
+  const statusEl = $("#sensorbox-status");
+  const downloadsEl = $("#sensorbox-downloads");
+  const downloadListEl = $("#sensorbox-download-list");
+  const buildButton = $("#sensorbox-build");
 
   buildButton.disabled = true;
   show(statusEl);
@@ -109,15 +109,15 @@ function formatStatus(data) {
 
 function setStatus(el, text, variant) {
   el.innerText = text;
-  el.classList.remove("orb-status-error", "orb-status-success");
-  if (variant === "error") el.classList.add("orb-status-error");
-  if (variant === "success") el.classList.add("orb-status-success");
+  el.classList.remove("sensorbox-status-error", "sensorbox-status-success");
+  if (variant === "error") el.classList.add("sensorbox-status-error");
+  if (variant === "success") el.classList.add("sensorbox-status-success");
 }
 
 function renderDownloads(data, listEl, recipe) {
   // Install notes — render markdown from the recipe, or fall back to a
   // generic message if the recipe has none.
-  const notesEl = $("#orb-install-notes");
+  const notesEl = $("#sensorbox-install-notes");
   if (recipe && recipe.install_notes) {
     notesEl.innerHTML = snarkdown(recipe.install_notes);
   } else {
@@ -132,7 +132,7 @@ function renderDownloads(data, listEl, recipe) {
   // still get the image via the ASU API directly and install manually.
   const binDir = data.bin_dir;
   const emmcInstallActive =
-    !!(recipe && recipe.install) && $("#orb-install-to-emmc").checked;
+    !!(recipe && recipe.install) && $("#sensorbox-install-to-emmc").checked;
   const images = (data.images || []).filter(
     (img) => !emmcInstallActive || !img.name.includes("ext4")
   );
@@ -153,7 +153,7 @@ function renderDownloads(data, listEl, recipe) {
   }
 
   // Repeat device links below the download list for convenience.
-  const downloadLinksEl = $("#orb-download-links");
+  const downloadLinksEl = $("#sensorbox-download-links");
   renderDeviceLinks(downloadLinksEl, recipe);
 }
 
