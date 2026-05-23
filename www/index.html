@@ -235,6 +235,18 @@
               <input type="checkbox" id="orb-docker-enabled" />
               <span>Install Docker</span>
             </label>
+
+            <label class="orb-checkbox-label">
+              <input type="checkbox" id="orb-scandump-enabled" />
+              <span>Install scandump (Wi-Fi passive scan to PCAP, via container)</span>
+            </label>
+            <p class="orb-hint">
+              Adds a <code>/usr/bin/scandump</code> wrapper around
+              <a href="https://github.com/dboze/scandump-docker" target="_blank" rel="noopener"><code>ghcr.io/dboze/scandump</code></a>.
+              Lets Wi-Fi Explorer Pro's remote-sensor flow (<code>ssh sensor scandump wlan0 -</code>)
+              work transparently. Image is pre-pulled on first boot when
+              network is available. Selecting this also installs Docker.
+            </p>
           </details>
 
           <details id="orb-advanced">

@@ -250,7 +250,19 @@ async function onSubmit(e) {
   const telemetryEnabled = $("#orb-telemetry-enabled").checked;
   const tailscaleEnabled = $("#orb-tailscale-enabled").checked;
   const tailscaleAuthKey = $("#orb-tailscale-authkey").value.trim();
-  const dockerEnabled = $("#orb-docker-enabled").checked;
+  // usb_diagnostic = enabled (Zero2 only, today) bundles WiFi Explorer
+  // Pro's remote-sensor support — wlanpi user + sudoers + setcap.
+  // Scandump is the tool WEPro actually drives, so usb_diagnostic
+  // implies scandump_enabled. The Zero2 recipe's usb_diagnostic
+  // section relies on the /usr/bin/scandump wrapper that the
+  // _common.yaml {{#scandump_enabled}} block installs.
+  const usbDiagnosticEnabled = selectedOptions.usb_diagnostic === "enabled";
+  const scandumpEnabled =
+    $("#orb-scandump-enabled").checked || usbDiagnosticEnabled;
+  // scandump implies docker — the wrapper is just `docker run ...`.
+  // Treat the scandump checkbox as a docker-enabled superset to avoid
+  // shipping a broken /usr/bin/scandump with no docker to back it.
+  const dockerEnabled = $("#orb-docker-enabled").checked || scandumpEnabled;
 
   const formValues = {
     orb_token: $("#orb-token").value.trim(),
@@ -306,11 +318,17 @@ async function onSubmit(e) {
     tailscale_auth_key: tailscaleAuthKey,
     // Docker — _common.yaml's {{#docker_enabled}} section enables
     // the dockerd init.d so the daemon starts at boot. The userspace
-    // packages (docker-ce, dockerd, docker-compose) come in via the
+    // packages (dockerd, docker CLI, docker-compose) come in via the
     // build request's package list; on the Zero2 the required kmods
     // are baked in via zero2.defconfig, on stock-kernel boards they
     // come from upstream feeds.
     docker_enabled: dockerEnabled,
+    // scandump — _common.yaml's {{#scandump_enabled}} section installs
+    // a /usr/bin/scandump wrapper around the ghcr.io/dboze/scandump
+    // container, plus a one-shot init.d that pre-pulls the image when
+    // network comes up. Implies docker_enabled (the wrapper is a thin
+    // `docker run ...`).
+    scandump_enabled: scandumpEnabled,
   };
 
   // Expose every recipe option's selected choice as a Mustache boolean
@@ -360,11 +378,13 @@ async function onSubmit(e) {
       ...(telemetryEnabled ? ["telegraf-full"] : []),
       // tailscale package: the daemon + CLI for joining the tailnet.
       ...(tailscaleEnabled ? ["tailscale"] : []),
-      // docker package set: dockerd daemon + CLI + compose plugin.
+      // docker package set: dockerd daemon + docker CLI + compose plugin.
+      // Upstream OpenWrt apk package names are "dockerd" / "docker" /
+      // "docker-compose" — not the docker.com "docker-ce" naming.
       // dockerd pulls in its own kmod deps (kmod-veth, kmod-ipt-nat, etc.);
       // on Zero2 those are pre-built locally via zero2.defconfig, on
       // stock-kernel devices they come from upstream apk feeds.
-      ...(dockerEnabled ? ["docker-ce", "docker-compose"] : []),
+      ...(dockerEnabled ? ["dockerd", "docker", "docker-compose"] : []),
     ],
     diff_packages: false,
     repositories: recipe.repositories || {},
