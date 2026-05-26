@@ -15,8 +15,7 @@
   <body>
     <header>
       <div>
-        <a href="https://orb.net" style="display: flex; align-items: center; gap: 0.5em; text-decoration: none;">
-          <img src="logo.svg" width="100" alt="Orb" />
+        <a href="https://github.com/orbforge/sensorbox" style="display: flex; align-items: center; gap: 0.5em; text-decoration: none;">
           <span style="font-family: Lexend, sans-serif; font-size: 1.4em; font-weight: 300; color: #7a2fd0; letter-spacing: -0.02em;">sensorbox</span>
         </a>
       </div>
@@ -26,12 +25,11 @@
 
     <div class="container">
       <div>
-        <h2>Build an Orb probe image</h2>
+        <h2>Customize your sensorbox</h2>
         <p>
-          Pick a supported device, provide an Orb Deployment Token and a root
-          password, and get a ready-to-flash OpenWrt image with Orb baked in.
-          See
-          <a href="https://github.com/dboze/sensorbox/blob/main/GOALS.md">GOALS.md</a>
+          Pick a supported device, configure and customize it, and get a ready-to-flash sensorbox image.
+          See the
+          <a href="https://github.com/dboze/sensorbox/blob/main/GOALS.md">project goals</a>
           for what sensorbox is and isn't.
         </p>
 
@@ -53,11 +51,13 @@
               id="sensorbox-token"
               type="text"
               required
-              placeholder="From https://orb.net — used to auto-link the probe to your Orb account"
               autocomplete="off"
               spellcheck="false"
             />
           </div>
+          <p class="sensorbox-hint">
+            Orb Deployment Token from https://cloud.orb.net/orchestration
+          </p>
 
           <div>
             <label for="sensorbox-root-password">Root Password</label>
@@ -66,11 +66,13 @@
                 id="sensorbox-root-password"
                 type="password"
                 required
-                placeholder="Used for emergency SSH access — sensorbox devices are designed to be reflashed, not reconfigured"
                 autocomplete="new-password"
               />
               <button type="button" class="sensorbox-toggle-pw" data-target="sensorbox-root-password" title="Show/hide password">show</button>
             </div>
+            <p class="sensorbox-hint">
+              Used for remote PCAPs and emergency SSH access. sensorbox devices are designed to be reflashed, not reconfigured
+            </p>
           </div>
 
           <div id="sensorbox-wifi-group" class="hide">
