@@ -392,6 +392,9 @@ async function onSubmit(e) {
     repository_keys: keyContents,
     defaults: defaultsScript,
   };
+  if (recipe.rootfs_size_mb) {
+    buildRequest.rootfs_size_mb = recipe.rootfs_size_mb;
+  }
 
   submitBuild(buildRequest, recipe);
 }
