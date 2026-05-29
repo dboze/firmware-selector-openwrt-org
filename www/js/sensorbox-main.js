@@ -70,7 +70,6 @@ function wireForm() {
     $("#sensorbox-device-description").innerText =
       state.currentRecipe?.description || "";
 
-    // Device links (OpenWrt wiki, vendor docs, orb.net docs).
     renderDeviceLinks($("#sensorbox-device-links"), state.currentRecipe);
 
     // Recipe options (e.g. Wi-Fi module selection). Each option becomes

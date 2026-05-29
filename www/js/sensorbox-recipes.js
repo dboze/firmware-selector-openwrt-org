@@ -53,18 +53,8 @@ export function getRecipeById(recipes, id) {
 // (after build) so the user has reference links at every stage.
 export function buildDeviceLinks(recipe) {
   const links = [];
-  if (recipe && recipe.title) {
-    const q = encodeURIComponent(recipe.title + " @toh");
-    links.push({
-      label: "OpenWrt wiki",
-      href: `https://openwrt.org/start?do=search&id=toh&q=${q}`,
-    });
-  }
   if (recipe && recipe.vendor_url) {
     links.push({ label: "Vendor docs", href: recipe.vendor_url });
-  }
-  if (recipe && recipe.docs_url) {
-    links.push({ label: "orb.net docs", href: recipe.docs_url });
   }
   return links;
 }
